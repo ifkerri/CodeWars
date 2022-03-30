@@ -2,6 +2,8 @@ function solveExpression(exp) {
 
     'use strict';
 
+    //console.log(exp);
+
     const rune = '?';
     const arrNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const arrSign = ['+', '*', '-'];
@@ -24,11 +26,11 @@ function solveExpression(exp) {
         let right = parseInt(newExp.slice(posSign + 1, equalPos));
         let result = parseInt(newExp.slice(equalPos + 1, newExp.length));
 
-        if (sign == '+' && (left + right) === result) {
+        if (sign == '+' && (left + right) === result && result != 0) {
             return arrNumber[i];
-        } else if (sign == '-' && (left - right) === result) {
+        } else if (sign == '-' && (left - right) === result && result != 0) {
             return arrNumber[i];
-        } else if (sign == '*' && (left * right) === result) {
+        } else if (sign == '*' && (left * right) === result && result != 0) {
             return arrNumber[i];
         }
     }
