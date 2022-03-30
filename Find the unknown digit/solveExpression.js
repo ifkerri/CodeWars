@@ -2,35 +2,43 @@ function solveExpression(exp) {
 
     'use strict';
 
-    //console.log(exp);
-
     const rune = '?';
-    const arrNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const arrSign = ['+', '*', '-'];
+    const arrMainNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const arrNumber = arrMainNumber.filter(function (e) {
+        return exp.indexOf(e) === -1;
+    });
+    const arrSign = ['+', '*', '--', '-'];
     const equalPos = exp.indexOf('=');
+    const expWithoutEqual = exp.slice(0, equalPos);
+    const expEqual = exp.slice(equalPos + 1, exp.length);
+    const passZero = expEqual.length > 1 && expEqual.indexOf(rune) === 0 || (expEqual.indexOf(rune) === 1 && expEqual.indexOf('-') === 0);
 
     let posSign = -1;
     let sign = '';
-    for (let index = 0; index < 3; ++index) {
-        posSign = exp.lastIndexOf(arrSign[index]);
+    for (let index = 0; index < arrSign.length; ++index) {
+        posSign = expWithoutEqual.lastIndexOf(arrSign[index]);
         if (posSign !== -1) {
             sign = arrSign[index];
             break;
         }
     }
 
-    for (let i = 0; i < 10; ++i) {
+    for (let i = 0; i < arrNumber.length; ++i) {
+
+        if (passZero && arrNumber[i] === 0) {
+            continue;
+        }
 
         const newExp = exp.split(rune).join(arrNumber[i]);
         let left = parseInt(newExp.slice(0, posSign));
         let right = parseInt(newExp.slice(posSign + 1, equalPos));
         let result = parseInt(newExp.slice(equalPos + 1, newExp.length));
 
-        if (sign == '+' && (left + right) === result && result != 0) {
+        if (sign == '+' && (left + right) === result) {
             return arrNumber[i];
-        } else if (sign == '-' && (left - right) === result && result != 0) {
+        } else if ((sign === '-' || sign === '--') && (left - right) === result) {
             return arrNumber[i];
-        } else if (sign == '*' && (left * right) === result && result != 0) {
+        } else if (sign === '*' && (left * right) === result) {
             return arrNumber[i];
         }
     }
@@ -39,4 +47,4 @@ function solveExpression(exp) {
 
 }
 
-let result = solveExpression('?*1=??');
+let result = solveExpression('-?56373--9216=-?47157');
