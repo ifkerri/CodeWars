@@ -1,0 +1,2 @@
+# CodeWars
+Different kata
