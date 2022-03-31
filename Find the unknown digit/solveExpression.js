@@ -11,7 +11,9 @@ function solveExpression(exp) {
     const equalPos = exp.indexOf('=');
     const expWithoutEqual = exp.slice(0, equalPos);
     const expEqual = exp.slice(equalPos + 1, exp.length);
-    const passZero = expEqual.length > 1 && expEqual.indexOf(rune) === 0 || (expEqual.indexOf(rune) === 1 && expEqual.indexOf('-') === 0);
+    const expEqualRunePos = expEqual.indexOf(rune);
+    const expEqualSignPos = expEqual.indexOf('-');
+    const passZero = expEqual.length > 1 && expEqualRunePos == 0 || (expEqualRunePos == 1 && expEqualSignPos == 0);
 
     let posSign = -1;
     let sign = '';
@@ -48,3 +50,4 @@ function solveExpression(exp) {
 }
 
 let result = solveExpression('-?56373--9216=-?47157');
+console.log(result);
