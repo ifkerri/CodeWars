@@ -12,7 +12,7 @@ function getPINs(observed) {
         '5' : ['2', '4', '5', '6', '8'],
         '6' : ['3', '5', '6', '9'],
         '7' : ['4', '7', '8'],
-        '8' : ['5', '7', '7', '9', '0'],
+        '8' : ['5', '7', '8', '9', '0'],
         '9' : ['6', '8', '9']
     };
 
@@ -34,25 +34,42 @@ function getPINs(observed) {
         if (iter === false) {
             break;
         }
-        result.push(iter.join(''));    
+        if (IsValid(iter, layoutExp, observed)) {
+            result.push(iter.join(''));
+        }
     }
     
     return result;
 }
 
-function PermutationsWithRepetition(src, len){
+function IsValid(iter, layoutExp, observed) {
 
-    var K = len - 1, k = 0,
+    for (let i = 0; i < observed.length; ++i) {
+
+        if (layoutExp[observed[i]].indexOf(iter[i]) == -1) {
+            return false;
+        }
+        
+    }
+
+    return true;
+
+}
+
+function PermutationsWithRepetition(src, len) {
+
+    let K = len - 1, k = 0,
         N = src.length, n = 0,
         out = [],
         stack = [];
 
-    function next(){
+    function Next() {
         while (true) {
             while (n < src.length) {
                 out[k] = src[n++];
-                if (k == K) return out.slice(0);
-                else {
+                if (k == K) {
+                    return out.slice(0);
+                } else {
                     if (n < src.length) {
                         stack.push(k);
                         stack.push(n);
@@ -61,7 +78,9 @@ function PermutationsWithRepetition(src, len){
                     n = 0;
                 }
             }
-            if (stack.length == 0) break;
+            if (stack.length == 0) {
+                break;
+            }    
 
             n = stack.pop();
             k = stack.pop();
@@ -69,18 +88,8 @@ function PermutationsWithRepetition(src, len){
         return false;
     }
 
-    //function rewind(){ k = 0; n = 0; out = []; stack = []; }
-
-    //function each(cb) {
-    //    rewind();
-    //    var v;
-    //    while (v = next()) if (cb(v) === false) return;
-    //}
-
     return {
-        next: next
-    //    each: each,
-    //    rewind: rewind
+        next: Next
     };
 }
 
