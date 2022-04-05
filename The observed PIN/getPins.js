@@ -30,23 +30,23 @@ function getPINs(observed) {
     console.log(layout);
     let Perm = PermutationsWithRepetition(layout, size);
     while (true) {
-        let iter = Perm.next();
-        if (iter === false) {
+        let i = Perm.next();
+        if (i === false) {
             break;
         }
-        if (IsValid(iter, layoutExp, observed)) {
-            result.push(iter.join(''));
+        if (IsValid(i, layoutExp, observed)) {
+            result.push(i.join(''));
         }
     }
     
     return result;
 }
 
-function IsValid(iter, layoutExp, observed) {
+function IsValid(i, layoutExp, observed) {
 
     for (let i = 0; i < observed.length; ++i) {
 
-        if (layoutExp[observed[i]].indexOf(iter[i]) == -1) {
+        if (layoutExp[observed[i]].indexOf(i[i]) == -1) {
             return false;
         }
         
