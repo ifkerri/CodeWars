@@ -19,18 +19,35 @@ let recoverSecret = function (triplets) {
 
         if (!aFind) {
             arr.push(a);
+            aPos = arr.indexOf(a);
+            aFind = true;
         }
 
-        if (!bFind && aFind) {
+        if (!bFind && !aFind) { // новая буква, добавляем в конец массива
+            arr.push(b);
+            bPos = arr.indexOf(b);
+            bFind = true;
 
-             
+        } else if (!bFind && aFind) { // новая буква, добавляем после предыдущей буквы
+            arr.splice(aPos + 1, 0, b);
+            bPos = arr.indexOf(b);
+            bFind = true;
+
+        } else if (bFind && aFind) { // буква есть
+            
+
+
+        } else {
 
         }
+
+    
 
     }
 
-};
+    return arr.join('');
 
+};
 
 const triplets1 = [
     ['t', 'u', 'p'],
