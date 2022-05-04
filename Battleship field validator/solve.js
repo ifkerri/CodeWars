@@ -1,40 +1,72 @@
 const validShip = (i, n, field, useShips) => {
 
-    let sumX = buildShip('X', field, n);
-    let sumY = buildShip('Y', field, i);
+    let sumX = buildShip(field, i, n, 'x');
+    let sumY = buildShip(field, i, n, 'y');
 
     console.log(`current ${i+1}:${n+1} - sumX: ${sumX} - sumY: ${sumY}`);
 
-    if ((sumX > 0 && sumY > 0) || sumX > 4 || sumY > 4) {
-        //return false;
-    }
-    
+    // if ((sumX > 0 && sumY > 0) || sumX > 4 || sumY > 4) {
+    //     //return false;
+    // }
+
     return true;
 
 };
 
-const buildShip = (dir, field, pos) => {
+const buildShip = (field, posX, posY, dir) => {
 
     let sum = 0;
-    if (pos != 0) {
-        for (let iter = pos; iter < 0; iter--) {
 
-            const value = dir == 'X' ? field[pos][iter] : field[iter][pos];
+    if (dir == 'x') {
+
+        for (let i = posY; i > 0; i--) {
+            const value = field[posX][i];
             if (value == 1) {
-                sum += 1;
+                sum++;
+            } else {
+                break;
+            }
+
+        }
+
+        for (let i = posY + 1; i < 9; i++) {
+            const value = field[posX][i];
+            if (value == 1) {
+                sum++;
             } else {
                 break;
             }
         }
-    }
 
-    for (let iter = pos; iter < 10; iter++) {
-        const value = dir == 'X' ? field[pos][iter] : field[iter][pos];
-        if (value == 1) {
-            sum += 1;
-        } else {
-            break;
+        if (posY == 0) {
+            sum++;
         }
+
+    } else {
+
+        for (let i = posX; i > 0; i--) {
+            const value = field[i][posY];
+            if (value == 1) {
+                sum++;
+            } else {
+                break;
+            }
+
+        }
+
+        for (let i = posX + 1; i < 9; i++) {
+            const value = field[i][posY];
+            if (value == 1) {
+                sum++;
+            } else {
+                break;
+            }
+        }   
+
+        if (posX == 0) {
+            sum++;
+        }
+
     }
 
     return sum;
