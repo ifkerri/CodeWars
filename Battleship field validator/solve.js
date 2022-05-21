@@ -1,193 +1,140 @@
-const buildShip = (field, posX, posY, ships) => {
-
-    // вычисляем данные кораблика
-    const arrCell = [];
-    let resultX = buildShipX(field, posX, posY, arrCell);
-    let resultY = buildShipY(field, posX, posY, arrCell);
-
-    // проверка расчета данных кораблика
-    console.log(`current ${posX+1}:${posY+1}-sumX:${resultX.sum}-sumY:${resultY.sum} / pos:[${resultX.start}][${resultX.end}]-[${resultY.start}][${resultY.end}] / size ${resultX.size}:${resultY.size}`);
-
-    // проверка на корректность размера корабля 
-    // если хотя бы один корабль имеет размер по любой оси более допустимого, то поле для игры заполнено неверно
-    if (!ships.sizeValid([resultX.size, resultY.size])) {
-        return false;
-    }
-
-    // проверка на корректность размера корабля по каждой оси относительно друг друга
-    // если хотя бы один корабль имеет размер по оси более допустимого относительно другой оси, то поле для игры заполнено неверно
-    if (!ships.sizePosValid(resultX.size, resultY.size)) {
-        return false;
-    }
-
-    console.log(arrCell);
-    console.log(ships.useCell);
-
-    // корабль подходит по размерам, добавляем его в список кораблей
-    // попутно заполняем все ячейки, которые занимает данный корабль вместе с границами
-    // если наш корабль использует уже занятые ячейки, то выбрасываем ошибку
-    const posXY = `[${resultX.start}][${resultX.end}]-[${resultY.start}][${resultY.end}]`;
-    const maxSize = Math.max(resultX.size, resultY.size);
-    if (!ships.add(posXY, arrCell, ships.nameSize(maxSize))) {
-        return false;
-    }
-
-    // console.log(arrCell);
-    // console.log(ships.useCell);
-
-    // возвращаем отметку об успешности проверки данных корабля
-    return true;
-
-};
-
-const buildShipX = (field, posX, posY, arrCell) => {
-
-    const result = {
-        sum: 0,
-        start: posY,
-        end: posY,
-        size: 0
-    };
-
-    for (let i = posY; i >= 0; i--) {
-        const value = field[posX][i];
-        if (value == 1) {
-            addCell(`[${posX}:${i}]`, arrCell);
-            addCell(`[${posX}:${i + 1}]`, arrCell);
-            addCell(`[${posX}:${i - 1}]`, arrCell);
-            addCell(`[${posX}:${i + 1}]`, arrCell);
-            addCell(`[${posX}:${i - 1}]`, arrCell);
-            addCell(`[${posX + 1}:${i}]`, arrCell);
-            addCell(`[${posX + 1}:${i + 1}]`, arrCell);
-            addCell(`[${posX + 1}:${i - 1}]`, arrCell);
-            addCell(`[${posX - 1}:${i}]`, arrCell);
-            addCell(`[${posX - 1}:${i + 1}]`, arrCell);
-            addCell(`[${posX - 1}:${i - 1}]`, arrCell);
-            result.sum++;
-            result.start = i;
-        } else {
-            break;
-        }
-
-    }
-
-    for (let i = posY + 1; i < 9; i++) {
-        const value = field[posX][i];
-        if (value == 1) {
-            addCell(`[${posX}:${i}]`, arrCell);
-            addCell(`[${posX}:${i + 1}]`, arrCell);
-            addCell(`[${posX}:${i - 1}]`, arrCell);
-            addCell(`[${posX}:${i + 1}]`, arrCell);
-            addCell(`[${posX}:${i - 1}]`, arrCell);
-            addCell(`[${posX + 1}:${i}]`, arrCell);
-            addCell(`[${posX + 1}:${i + 1}]`, arrCell);
-            addCell(`[${posX + 1}:${i - 1}]`, arrCell);
-            addCell(`[${posX - 1}:${i}]`, arrCell);
-            addCell(`[${posX - 1}:${i + 1}]`, arrCell);
-            addCell(`[${posX - 1}:${i - 1}]`, arrCell);
-            result.sum++;
-            result.end = i;
-        } else {
-            break;
-        }
-    }
-
-    result.size = result.end - result.start + 1;
-    return result;
-
-};
-
-const buildShipY = (field, posX, posY, arrCell) => {
-
-    const result = {
-        sum: 0,
-        start: posX,
-        end: posX,
-        borderStart: posX,
-        borderEnd: posX,
-        size: 0
-    };
-
-    for (let i = posX; i >= 0; i--) {
-        const value = field[i][posY];
-        if (value == 1) {
-            addCell(`[${i}:${posY}]`, arrCell);
-            addCell(`[${i}:${posY + 1}]`, arrCell);
-            addCell(`[${i}:${posY - 1}]`, arrCell);
-            addCell(`[${i + 1}:${posY}]`, arrCell);
-            addCell(`[${i + 1}:${posY + 1}]`, arrCell);
-            addCell(`[${i + 1}:${posY - 1}]`, arrCell);
-            addCell(`[${i - 1}:${posY}]`, arrCell);
-            addCell(`[${i - 1}:${posY + 1}]`, arrCell);
-            addCell(`[${i - 1}:${posY - 1}]`, arrCell);
-            result.sum++;
-            result.start = i;
-        } else {
-            break;
-        }
-
-    }
-
-    for (let i = posX + 1; i < 9; i++) {
-        const value = field[i][posY];
-        if (value == 1) {
-            addCell(`[${i}:${posY}]`, arrCell);
-            addCell(`[${i}:${posY + 1}]`, arrCell);
-            addCell(`[${i}:${posY - 1}]`, arrCell);
-            addCell(`[${i + 1}:${posY}]`, arrCell);
-            addCell(`[${i + 1}:${posY + 1}]`, arrCell);
-            addCell(`[${i + 1}:${posY - 1}]`, arrCell);
-            addCell(`[${i - 1}:${posY}]`, arrCell);
-            addCell(`[${i - 1}:${posY + 1}]`, arrCell);
-            addCell(`[${i - 1}:${posY - 1}]`, arrCell);
-            result.sum++;
-            result.end = i;
-        } else {
-            break;
-        }
-    }
-
-    result.borderStart = result.start == 0 ? -1 : result.start - 1;
-    result.borderEnd = result.end == 8 ? -1 : result.end + 1;
-    result.size = result.end - result.start + 1;
-    return result;
-
-};
-
-const addCell = (cell, arr) => {
-    if (arr.indexOf(cell) == -1) {
-        arr.push(cell);
-    }
-};
 
 function validateBattlefield(field) {
 
     // основной объект хранения данных по используемым кораблям
-    // в процессе сборки данных, проверяем каждый корабль. Если он не подходит по условия - выбрасываем false
+    // в процессе сборки данных, проверяем каждый корабль. Если он не подходит по условия - проверка заканчивается досрочно
     // если в процессе сборки ошибок не обнаружено, тогда выполняем общую проверку на количество кораблей на поле
     const ships = {
-        pos: [],
-        useCell: [],
-        count: {
+        pos: [], // массив координат всех кораблей
+        posBorder: [], // массив координат диагональных границ
+        count: { //  хранилище количества кораблей в разрезе категорий
             one: 0,
             two: 0,
             three: 0,
             four: 0
         },
+        createPosBorderArray: (resultX, resultY) => {
+            
+            return `[${resultX.start - 1}:${resultY.start - 1}]-[${resultX.start - 1}:${resultY.start + 1}]-[${resultX.end + 1}:${resultY.end - 1}]-[${resultX.end + 1}:${resultY.end + 1}]`.split('-');
+
+        },
         runBuild: (field) => {
+            
             for (let posX = 0; posX < 9; posX++) {
                 for (let posY = 0; posY < 9; posY++) {
-                    const currentCellValue = field[posX][posY];
-                    if (currentCellValue !== 1) {
+                    const cellValue = field[posX][posY];
+                    if (cellValue !== 1) {
                         continue;
                     }
-                    let result = buildShip(field, posX, posY, ships);
+                    let result = ships.buildShip(field, posX, posY, ships);
                     if (!result) {
                         return false; // в процессе сборки выявлены ошибки
                     }
                 }
             }
             return true; // сборка выполнена успешно
+        },
+        buildShip: (field, posX, posY, ships) => {
+
+            // вычисляем данные кораблика по осям
+            let resultX = ships.buildShipX(field, posX, posY);
+            let resultY = ships.buildShipY(field, posX, posY);
+        
+            // проверка на корректность размера корабля (размеры от 1 до 4)
+            // если хотя бы один корабль имеет размер по любой оси более допустимого, то поле для игры заполнено неверно
+            if (!ships.sizeValid([resultX.size, resultY.size])) {
+                return false;
+            }
+        
+            // проверка на корректность размера корабля по каждой оси относительно друг друга (допускаются только плоские корабли)
+            // если хотя бы один корабль имеет размер по оси более допустимого относительно другой оси, то поле для игры заполнено неверно
+            if (!ships.sizePosValid(resultX.size, resultY.size)) {
+                return false;
+            }
+        
+            // корабль подходит по размерам, добавляем его в список кораблей (если он еще не был добавлен)
+            // помимо этого проверяем границы по диагонали от начала и конца корабля (остальные ячейки не учитываем, т.к. корабль бы не прошел по размеру)
+            const posXY = `[${resultX.start}:${resultY.start}]-[${resultX.end}:${resultY.end}]`; // общие координаты
+            const posStart = `[${resultX.start}:${resultY.start}]`; // координаты начала корабля
+            const posEnd = `[${resultX.end}:${resultY.end}]`; // координаты конца корабля
+            const posBorderArray = ships.createPosBorderArray(resultX, resultY); // массив координат диагональных границ
+            const nameSize = ships.nameSize(Math.max(resultX.size, resultY.size)); // имя свойства, которое отвечает за накопление количества используемых кораблей
+            if (!ships.add(posXY, posStart, posEnd, posBorderArray, nameSize)) {
+                return false;
+            }
+        
+            // корабль собран и добавлен в нашу мини БД
+            // возвращаем отметку об успешности проверки данных корабля
+            return true;
+        
+        },
+        buildShipX: (field, posX, posY) => {
+
+            const result = {
+                sum: 0,
+                start: posY,
+                end: posY,
+                size: 0
+            };
+        
+            for (let i = posY; i >= 0; i--) {
+                const value = field[posX][i];
+                if (value == 1) {
+                    result.sum++;
+                    result.start = i;
+                } else {
+                    break;
+                }
+        
+            }
+        
+            for (let i = posY + 1; i < 9; i++) {
+                const value = field[posX][i];
+                if (value == 1) {
+                    result.sum++;
+                    result.end = i;
+                } else {
+                    break;
+                }
+            }
+        
+            result.size = result.end - result.start + 1;
+            return result;
+        
+        },
+        buildShipY: (field, posX, posY) => {
+
+            const result = {
+                sum: 0,
+                start: posX,
+                end: posX,
+                size: 0
+            };
+        
+            for (let i = posX; i >= 0; i--) {
+                const value = field[i][posY];
+                if (value == 1) {
+                    result.sum++;
+                    result.start = i;
+                } else {
+                    break;
+                }
+        
+            }
+        
+            for (let i = posX + 1; i < 9; i++) {
+                const value = field[i][posY];
+                if (value == 1) {
+                    result.sum++;
+                    result.end = i;
+                } else {
+                    break;
+                }
+            }
+        
+            result.size = result.end - result.start + 1;
+            return result;
+        
         },
         sizeValid: (sizes) => {
             for (let i = 0; i < sizes.length; i++) {
@@ -209,17 +156,17 @@ function validateBattlefield(field) {
                     return 'four';
             }
         },
-        add: (posXY, arrCell, nameSize) => {
+        add: (posXY, posX, posY, posBorderArray, nameSize) => {
             if (ships.pos.indexOf(posXY) == -1) {
                 ships.pos.push(posXY);
                 ships.count[nameSize]++;
-                arrCell.forEach(e => {
-                    if (ships.useCell.indexOf(e) !== -1) {
-                        return false;
-                    } else {
-                        ships.useCell.push(e);
+                if (ships.posBorder.indexOf(posX) !== -1 || ships.posBorder.indexOf(posY) !== -1) {
+                    return false; //
+                } else {
+                    for (let i = 0; i < posBorderArray.length; i++) {
+                        ships.posBorder.push(posBorderArray[i]);
                     }
-                });
+                }
             }
 
             return true;
@@ -233,13 +180,11 @@ function validateBattlefield(field) {
         return false;
     }
 
-    // все корабли собраны
-
+    // все корабли собраны!!
     return ships.countValid();
 
 }
 
-// goood
 // console.log(validateBattlefield(
 //     [
 //         [1, 0, 0, 0, 0, 1, 1, 0, 0, 0],
@@ -252,17 +197,17 @@ function validateBattlefield(field) {
 //         [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
 //         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 //         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-//     ]));
+//     ])); // goood = true
 
-console.log(validateBattlefield([
-    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0],
-    [1, 0, 1, 0, 1, 1, 1, 0, 1, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-]));
+// console.log(validateBattlefield([
+//     [1, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+//     [1, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+//     [1, 0, 1, 0, 1, 1, 1, 0, 1, 0],
+//     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+//     [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+//     [0, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+// ])); // goood = false
