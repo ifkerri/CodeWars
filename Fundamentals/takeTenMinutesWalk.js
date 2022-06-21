@@ -6,13 +6,13 @@ function isValidWalk(walk) {
 
     if (walk.length != 10) {
         return false;
-    }    
+    }
 
     let posX = 0;
     let posY = 0;
 
     walk.forEach(item => {
-        switch(item) {
+        switch (item) {
             case 'n':
                 posY++;
                 break;
@@ -24,11 +24,11 @@ function isValidWalk(walk) {
                 break;
             case 'w':
                 posX--;
-                break;                        
+                break;
         }
     });
 
     return posX == 0 && posY == 0;
 }
 
-console.log(isValidWalk(['n','s','n','s','n','s','n','s','n','s'])); // true - good
+console.log(isValidWalk(['n', 's', 'n', 's', 'n', 's', 'n', 's', 'n', 's'])); // true - good
