@@ -11,12 +11,10 @@
 // anagrams('laser', ['lazing', 'lazy',  'lacer']) => []
 
 function anagrams(word, words) {
-  
   const result = [];
   if (words.length == 0) return [];
 
   for (let i = 0; i < words.length; i++) {
-   
     const wordCheck = words[i];
     let wordMain = word;
     let need = true;
@@ -30,15 +28,12 @@ function anagrams(word, words) {
       }
 
       wordMain = wordMain.replace(letter, "");
-
     }
 
     if (need) result.push(wordCheck);
-
   }
 
   return result;
-  
 }
 
 console.log(anagrams("abba", ["aabb", "abcd", "bbaa", "dada"])); // -- ['aabb', 'bbaa'] - good
